@@ -16,7 +16,10 @@ export type PendingAction =
 
 export type PlanEditor = ReturnType<typeof usePlanEditor>;
 
-export function usePlanEditor(initialPlan: MilestonePlanDto) {
+export function usePlanEditor(
+  initialPlan: MilestonePlanDto,
+  onError: (error: ClientError) => void = () => {},
+) {
   const [plan, setPlan] = useState(initialPlan);
   const [pending, setPending] = useState<PendingAction | null>(null);
   const [error, setError] = useState<ClientError | null>(null);
@@ -32,6 +35,7 @@ export function usePlanEditor(initialPlan: MilestonePlanDto) {
     setPending(null);
     if (!result.success) {
       setError(result.error);
+      onError(result.error);
       return null;
     }
     setPlan(toPlan(result.data));

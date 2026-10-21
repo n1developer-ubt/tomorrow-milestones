@@ -7,6 +7,7 @@ import { ErrorAlert } from "@/components/milestones/error-alert";
 import { MilestoneCard } from "@/components/milestones/milestone-card";
 import { RefineAllForm } from "@/components/milestones/refine-all-form";
 import { RemovedMilestones } from "@/components/milestones/removed-milestones";
+import { useErrorToast } from "@/components/milestones/use-error-toast";
 import { acceptedCount, type MilestonePlanDto } from "@/lib/plans/plan-dto";
 import { usePlanEditor } from "@/lib/plans/use-plan-editor";
 import { PlanStatusBadge } from "./plan-status-badge";
@@ -19,7 +20,8 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
   const tRefine = useTranslations("refineAll");
   const tPublish = useTranslations("publish");
   const format = useFormatter();
-  const editor = usePlanEditor(initialPlan);
+  const showErrorToast = useErrorToast();
+  const editor = usePlanEditor(initialPlan, showErrorToast);
   const [notice, setNotice] = useState<string | null>(null);
   const { plan, pending, error } = editor;
   const busy = pending !== null;

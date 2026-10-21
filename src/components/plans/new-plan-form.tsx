@@ -4,12 +4,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ErrorAlert } from "@/components/milestones/error-alert";
 import { RequestForm } from "@/components/milestones/request-form";
+import { useErrorToast } from "@/components/milestones/use-error-toast";
 import type { ClientError } from "@/lib/api/client";
 import { planClient } from "@/lib/plans/plan-client";
 import type { GenerationRequest } from "@/lib/validation/generation-request";
 
 export function NewPlanForm() {
   const router = useRouter();
+  const showErrorToast = useErrorToast();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<ClientError | null>(null);
 
@@ -20,6 +22,7 @@ export function NewPlanForm() {
     if (!result.success) {
       setPending(false);
       setError(result.error);
+      showErrorToast(result.error);
       return;
     }
     router.push(`/plans/${result.data.id}`);

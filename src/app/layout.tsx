@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Geist_Mono, Manrope } from "next/font/google";
 import { SiteHeader } from "@/components/plans/site-header";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -31,6 +32,7 @@ export default async function RootLayout({
       <body className="antialiased">
         <NextIntlClientProvider>
           <SiteHeader />
+          <Toaster richColors position="top-right" />
           {children}
         </NextIntlClientProvider>
       </body>
