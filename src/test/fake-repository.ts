@@ -9,22 +9,32 @@ export class InMemoryMilestonePlanRepository implements MilestonePlanRepository 
 
   async create(plan: NewMilestonePlan): Promise<MilestonePlan> {
     const count = this.plans.size + 1;
+    const timestamp = new Date(Date.UTC(2026, 9, 21, 10, count));
     const saved = {
-      ...plan,
+      ...structuredClone(plan),
       id: `plan-${count}`,
-      createdAt: new Date(Date.UTC(2026, 9, 21, 10, count)),
+      createdAt: timestamp,
+      updatedAt: timestamp,
     };
     this.plans.set(saved.id, saved);
-    return saved;
+    return structuredClone(saved);
   }
 
   async findById(id: string): Promise<MilestonePlan | null> {
-    return this.plans.get(id) ?? null;
+    const plan = this.plans.get(id);
+    return plan ? structuredClone(plan) : null;
   }
 
   async listLatest(limit: number): Promise<MilestonePlan[]> {
     return [...this.plans.values()]
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice(0, limit);
+      .slice(0, limit)
+      .map((plan) => structuredClone(plan));
+  }
+
+  async update(plan: MilestonePlan): Promise<MilestonePlan> {
+    const updated = { ...structuredClone(plan), updatedAt: new Date() };
+    this.plans.set(plan.id, updated);
+    return structuredClone(updated);
   }
 }

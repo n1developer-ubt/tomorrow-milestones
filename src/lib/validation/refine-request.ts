@@ -7,6 +7,10 @@ export type RefineMilestoneRequest = z.infer<
   typeof RefineMilestoneRequestSchema
 >;
 export type RefineMode = z.infer<typeof RefineMode>;
+export type RefinePlanBody = z.infer<typeof RefinePlanBodySchema>;
+export type RefinePlanMilestoneBody = z.infer<
+  typeof RefinePlanMilestoneBodySchema
+>;
 
 export const INSTRUCTION_LIMITS = { min: 3, max: 500 } as const;
 
@@ -50,4 +54,18 @@ export const RefineMilestoneRequestSchema = z
   .refine((value) => value.milestones.some((m) => m.id === value.targetId), {
     message: "validation.refine.targetNotFound",
     path: ["targetId"],
+  });
+
+export const RefinePlanBodySchema = z.object({
+  instruction: InstructionSchema,
+});
+
+export const RefinePlanMilestoneBodySchema = z
+  .object({
+    mode: RefineMode,
+    instruction: InstructionSchema.optional(),
+  })
+  .refine((value) => value.mode !== "custom" || value.instruction, {
+    message: "validation.refine.instructionRequired",
+    path: ["instruction"],
   });

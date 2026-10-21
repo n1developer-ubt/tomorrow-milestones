@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { z } from "zod";
-import { AiError, type AiErrorCode } from "@/lib/ai/errors";
 import { translate } from "@/i18n/translate";
+import { AiError, type AiErrorCode } from "@/lib/ai/errors";
+import { PlanError, type PlanErrorCode } from "@/lib/plans/plan-error";
 import type { ApiErrorCode, ApiIssue, ApiResponse } from "./types";
 
 const AI_ERROR_STATUS: Record<AiErrorCode, number> = {
@@ -9,6 +10,13 @@ const AI_ERROR_STATUS: Record<AiErrorCode, number> = {
   rate_limited: 429,
   invalid_output: 502,
   provider_error: 502,
+};
+
+const PLAN_ERROR_STATUS: Record<PlanErrorCode, number> = {
+  not_found: 404,
+  milestone_not_found: 404,
+  plan_published: 409,
+  nothing_accepted: 422,
 };
 
 export function success<T>(
@@ -51,6 +59,9 @@ export function validationFailure(
 export function handleRouteError(
   error: unknown,
 ): NextResponse<ApiResponse<never>> {
+  if (error instanceof PlanError) {
+    return failure(PLAN_ERROR_STATUS[error.code], error.code);
+  }
   if (error instanceof AiError) {
     console.error(`[ai] ${error.code}: ${error.message}`);
     return failure(AI_ERROR_STATUS[error.code], error.code);

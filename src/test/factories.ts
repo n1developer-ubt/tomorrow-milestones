@@ -1,8 +1,8 @@
 import { Factory } from "fishery";
+import type { ReviewCard } from "@/lib/review/review-reducer";
 import type { NewMilestonePlan } from "@/lib/storage/milestone-plan-repository";
 import type { GenerationRequest } from "@/lib/validation/generation-request";
 import type { DraftMilestone, Milestone } from "@/lib/validation/milestone";
-import type { SavedMilestone } from "@/lib/validation/milestone-plan";
 import type { TokenUsage } from "@/lib/validation/token-usage";
 
 export type MilestoneOutput = Milestone & { id: string | null };
@@ -34,17 +34,21 @@ export const tokenUsageFactory = Factory.define<TokenUsage>(() => ({
   totalTokens: 420,
 }));
 
-export const savedMilestoneFactory = Factory.define<SavedMilestone>(() => ({
-  ...milestoneFactory.build(),
+export const reviewCardFactory = Factory.define<ReviewCard>(() => ({
+  milestone: draftMilestoneFactory.build(),
+  status: "pending",
   edited: false,
 }));
 
 export const newMilestonePlanFactory = Factory.define<NewMilestonePlan>(() => ({
   ...generationRequestFactory.build(),
-  milestones: savedMilestoneFactory.buildList(2),
+  status: "draft",
+  milestones: reviewCardFactory.buildList(2),
+  removed: [],
   promptVersion: "test-version",
   model: "gpt-5-nano",
   tokenUsage: tokenUsageFactory.build(),
+  publishedAt: null,
 }));
 
 export function toOutput({

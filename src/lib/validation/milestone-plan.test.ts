@@ -1,42 +1,21 @@
 import { describe, expect, it } from "vitest";
-import {
-  generationRequestFactory,
-  milestoneFactory,
-  savedMilestoneFactory,
-  tokenUsageFactory,
-} from "@/test/factories";
-import { SaveMilestonePlanRequestSchema } from "./milestone-plan";
+import { LIST_LIMITS, ListMilestonePlansQuerySchema } from "./milestone-plan";
 
-const request = generationRequestFactory.build();
-const tokenUsage = tokenUsageFactory.build();
-
-describe("SaveMilestonePlanRequestSchema", () => {
-  it("accepts accepted milestones and defaults edited to false", () => {
-    const result = SaveMilestonePlanRequestSchema.parse({
-      request,
-      milestones: [milestoneFactory.build()],
-      tokenUsage,
+describe("ListMilestonePlansQuerySchema", () => {
+  it("defaults the limit", () => {
+    expect(ListMilestonePlansQuerySchema.parse({})).toEqual({
+      limit: LIST_LIMITS.default,
     });
-    expect(result.milestones[0]?.edited).toBe(false);
   });
 
-  it("rejects saving without milestones", () => {
-    const result = SaveMilestonePlanRequestSchema.safeParse({
-      request,
-      milestones: [],
-      tokenUsage,
+  it("coerces numeric strings", () => {
+    expect(ListMilestonePlansQuerySchema.parse({ limit: "5" })).toEqual({
+      limit: 5,
     });
-    expect(result.error?.issues[0]?.message).toBe(
-      "validation.plan.noneAccepted",
-    );
   });
 
-  it("rejects more milestones than allowed", () => {
-    const result = SaveMilestonePlanRequestSchema.safeParse({
-      request,
-      milestones: savedMilestoneFactory.buildList(7),
-      tokenUsage,
-    });
+  it.each(["0", "101", "1.5", "abc"])("rejects limit=%s", (limit) => {
+    const result = ListMilestonePlansQuerySchema.safeParse({ limit });
     expect(result.success).toBe(false);
   });
 });

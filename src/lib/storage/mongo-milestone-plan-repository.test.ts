@@ -16,27 +16,60 @@ function setup() {
   const cursor = { sort: vi.fn(), limit: vi.fn(), toArray };
   cursor.sort.mockReturnValue(cursor);
   cursor.limit.mockReturnValue(cursor);
+  const replaceOne = vi.fn().mockResolvedValue({ matchedCount: 1 });
   const collection = {
     insertOne,
     findOne,
+    replaceOne,
     find: vi.fn().mockReturnValue(cursor),
   } as unknown as Collection<MilestonePlanDocument>;
   const repository = new MongoMilestonePlanRepository(
     collection,
     () => createdAt,
   );
-  return { repository, insertOne, findOne, insertedId, cursor };
+  return { repository, insertOne, findOne, replaceOne, insertedId, cursor };
 }
 
 describe("MongoMilestonePlanRepository", () => {
-  it("creates a plan with a timestamp and returns it with a string id", async () => {
+  it("creates a plan with timestamps and returns it with a string id", async () => {
     const { repository, insertOne, insertedId } = setup();
     const plan = newMilestonePlanFactory.build();
 
     const saved = await repository.create(plan);
 
-    expect(insertOne).toHaveBeenCalledWith({ ...plan, createdAt });
-    expect(saved).toEqual({ ...plan, createdAt, id: insertedId.toHexString() });
+    expect(insertOne).toHaveBeenCalledWith({
+      ...plan,
+      createdAt,
+      updatedAt: createdAt,
+    });
+    expect(saved).toEqual({
+      ...plan,
+      createdAt,
+      updatedAt: createdAt,
+      id: insertedId.toHexString(),
+    });
+  });
+
+  it("replaces the stored plan and refreshes updatedAt", async () => {
+    const { repository, replaceOne } = setup();
+    const _id = new ObjectId();
+    const earlier = new Date("2026-01-01T00:00:00Z");
+    const document = {
+      ...newMilestonePlanFactory.build(),
+      createdAt: earlier,
+      updatedAt: earlier,
+    };
+
+    const updated = await repository.update({
+      ...document,
+      id: _id.toHexString(),
+    });
+
+    expect(replaceOne).toHaveBeenCalledWith(
+      { _id },
+      { ...document, updatedAt: createdAt },
+    );
+    expect(updated.updatedAt).toEqual(createdAt);
   });
 
   it("finds a plan by id", async () => {

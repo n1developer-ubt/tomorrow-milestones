@@ -16,7 +16,12 @@ export class MongoMilestonePlanRepository implements MilestonePlanRepository {
   ) {}
 
   async create(plan: NewMilestonePlan): Promise<MilestonePlan> {
-    const document: MilestonePlanDocument = { ...plan, createdAt: this.now() };
+    const timestamp = this.now();
+    const document: MilestonePlanDocument = {
+      ...plan,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    };
     const { insertedId } = await this.collection.insertOne(document);
     return toMilestonePlan({ ...document, _id: insertedId });
   }
@@ -34,6 +39,12 @@ export class MongoMilestonePlanRepository implements MilestonePlanRepository {
       .limit(limit)
       .toArray();
     return documents.map(toMilestonePlan);
+  }
+
+  async update({ id, ...plan }: MilestonePlan): Promise<MilestonePlan> {
+    const document: MilestonePlanDocument = { ...plan, updatedAt: this.now() };
+    await this.collection.replaceOne({ _id: new ObjectId(id) }, document);
+    return { ...document, id };
   }
 }
 

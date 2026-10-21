@@ -1,8 +1,15 @@
 import type { NextResponse } from "next/server";
 import type { AiErrorCode } from "@/lib/ai/errors";
+import type { PlanErrorCode } from "@/lib/plans/plan-error";
 
 export type ApiErrorCode =
-  AiErrorCode | "invalid_json" | "validation" | "not_found" | "internal_error";
+  | AiErrorCode
+  | PlanErrorCode
+  | "invalid_json"
+  | "validation"
+  | "internal_error";
+
+export type RouteContext<P> = { params: Promise<P> };
 
 export type ApiIssue = { path: string; message: string };
 

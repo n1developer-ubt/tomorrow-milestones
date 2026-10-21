@@ -1,12 +1,10 @@
-import { getLlm } from "@/lib/ai/chat-model";
-import { PROMPT_VERSION } from "@/lib/ai/prompts";
 import { success } from "@/lib/api/responses";
 import { validatedQueryRoute, validatedRoute } from "@/lib/api/route-handlers";
+import { getPlanDeps } from "@/lib/plans/plan-deps";
+import { createPlan } from "@/lib/plans/plan-service";
 import { getMilestonePlanRepository } from "@/lib/storage";
-import {
-  ListMilestonePlansQuerySchema,
-  SaveMilestonePlanRequestSchema,
-} from "@/lib/validation/milestone-plan";
+import { GenerationRequestSchema } from "@/lib/validation/generation-request";
+import { ListMilestonePlansQuerySchema } from "@/lib/validation/milestone-plan";
 
 export const GET = validatedQueryRoute(
   ListMilestonePlansQuerySchema,
@@ -16,17 +14,6 @@ export const GET = validatedQueryRoute(
   },
 );
 
-export const POST = validatedRoute(
-  SaveMilestonePlanRequestSchema,
-  async ({ request, milestones, tokenUsage }) => {
-    const repository = await getMilestonePlanRepository();
-    const plan = await repository.create({
-      ...request,
-      milestones,
-      tokenUsage,
-      promptVersion: PROMPT_VERSION,
-      model: getLlm().modelName,
-    });
-    return success(plan, 201);
-  },
+export const POST = validatedRoute(GenerationRequestSchema, async (request) =>
+  success(await createPlan(await getPlanDeps(), request), 201),
 );

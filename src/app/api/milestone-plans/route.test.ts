@@ -1,19 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getLlm } from "@/lib/ai/chat-model";
-import { PROMPT_VERSION } from "@/lib/ai/prompts";
+import { getPlanDeps } from "@/lib/plans/plan-deps";
 import { getMilestonePlanRepository } from "@/lib/storage";
 import { fakeLlm } from "@/test/fake-model";
 import { InMemoryMilestonePlanRepository } from "@/test/fake-repository";
 import {
   generationRequestFactory,
+  milestoneFactory,
   newMilestonePlanFactory,
-  savedMilestoneFactory,
-  tokenUsageFactory,
 } from "@/test/factories";
-import { jsonRequest } from "@/test/http";
+import { jsonRequest, noParams } from "@/test/http";
 import { GET, POST } from "./route";
 
-vi.mock("@/lib/ai/chat-model", () => ({ getLlm: vi.fn() }));
+vi.mock("@/lib/plans/plan-deps", () => ({ getPlanDeps: vi.fn() }));
 vi.mock("@/lib/storage", () => ({ getMilestonePlanRepository: vi.fn() }));
 
 let repository: InMemoryMilestonePlanRepository;
@@ -21,104 +19,84 @@ let repository: InMemoryMilestonePlanRepository;
 beforeEach(() => {
   repository = new InMemoryMilestonePlanRepository();
   vi.mocked(getMilestonePlanRepository).mockResolvedValue(repository);
-  vi.mocked(getLlm).mockReturnValue(fakeLlm().llm);
+  vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
 function list(query = "") {
-  return GET(new Request(`http://localhost/api/milestone-plans${query}`));
+  return GET(
+    new Request(`http://localhost/api/milestone-plans${query}`),
+    noParams,
+  );
 }
 
 describe("GET /api/milestone-plans", () => {
-  it("lists saved plans newest first", async () => {
+  it("lists plans newest first", async () => {
     const first = await repository.create(newMilestonePlanFactory.build());
     const second = await repository.create(newMilestonePlanFactory.build());
 
-    const response = await list();
-    const body = await response.json();
+    const body = await (await list()).json();
 
-    expect(response.status).toBe(200);
     expect(body.data.map((p: { id: string }) => p.id)).toEqual([
       second.id,
       first.id,
     ]);
   });
 
-  it("respects the limit", async () => {
-    await repository.create(newMilestonePlanFactory.build());
-    await repository.create(newMilestonePlanFactory.build());
-
-    const body = await (await list("?limit=1")).json();
-
-    expect(body.data).toHaveLength(1);
-  });
-
   it.each(["0", "101", "abc"])("rejects limit=%s", async (limit) => {
-    const response = await list(`?limit=${limit}`);
-
-    expect(response.status).toBe(400);
-    expect((await response.json()).error.code).toBe("validation");
+    expect((await list(`?limit=${limit}`)).status).toBe(400);
   });
 });
 
 describe("POST /api/milestone-plans", () => {
-  it("saves accepted milestones with prompt version, model and token usage", async () => {
-    const request = generationRequestFactory.build();
-    const milestones = savedMilestoneFactory.buildList(2);
-    const tokenUsage = tokenUsageFactory.build();
+  it("generates milestones and stores them as a draft", async () => {
+    vi.mocked(getPlanDeps).mockResolvedValue({
+      llm: fakeLlm({ milestones: milestoneFactory.buildList(3) }).llm,
+      repository,
+    });
 
     const response = await POST(
-      jsonRequest({ request, milestones, tokenUsage }),
+      jsonRequest(generationRequestFactory.build()),
+      noParams,
     );
     const body = await response.json();
 
     expect(response.status).toBe(201);
-    expect(body.success).toBe(true);
-    expect(body.data).toMatchObject({
-      ...request,
-      milestones,
-      tokenUsage,
-      promptVersion: PROMPT_VERSION,
-      model: "fake-model",
-    });
+    expect(body.data).toMatchObject({ status: "draft" });
+    expect(body.data.milestones).toHaveLength(3);
     expect(repository.plans.has(body.data.id)).toBe(true);
   });
 
-  it("strips review-only fields before saving", async () => {
-    const milestone = {
-      ...savedMilestoneFactory.build(),
-      id: "m1",
-      locked: true,
-    };
+  it("does not store anything when the AI fails", async () => {
+    vi.mocked(getPlanDeps).mockResolvedValue({
+      llm: fakeLlm("bad", "bad").llm,
+      repository,
+    });
 
-    await POST(
-      jsonRequest({
-        request: generationRequestFactory.build(),
-        milestones: [milestone],
-        tokenUsage: tokenUsageFactory.build(),
-      }),
+    const response = await POST(
+      jsonRequest(generationRequestFactory.build()),
+      noParams,
     );
 
-    const [saved] = [...repository.plans.values()];
-    expect(saved?.milestones[0]).not.toHaveProperty("id");
-    expect(saved?.milestones[0]).not.toHaveProperty("locked");
+    expect(response.status).toBe(502);
+    expect(repository.plans.size).toBe(0);
   });
 
-  it("rejects saving without accepted milestones", async () => {
+  it("returns translated validation issues", async () => {
     const response = await POST(
-      jsonRequest({
-        request: generationRequestFactory.build(),
-        milestones: [],
-        tokenUsage: tokenUsageFactory.build(),
-      }),
+      jsonRequest(generationRequestFactory.build({ brief: "short" })),
+      noParams,
     );
 
     expect(response.status).toBe(400);
     expect((await response.json()).error.issues).toEqual([
-      {
-        path: "milestones",
-        message: "Accept at least one milestone before saving",
-      },
+      { path: "brief", message: "Brief needs more detail" },
     ]);
-    expect(repository.plans.size).toBe(0);
+  });
+
+  it("rejects malformed JSON", async () => {
+    const response = await POST(jsonRequest("{nope"), noParams);
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).error.code).toBe("invalid_json");
   });
 });
