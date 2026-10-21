@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import messages from "../../messages/en.json";
 import type { AiErrorCode } from "@/lib/ai/errors";
+import type { ApiErrorCode } from "@/lib/api/types";
 
 function hasKey(key: string): boolean {
   let node: unknown = messages;
@@ -41,5 +42,15 @@ describe("messages/en.json", () => {
       "provider_error",
     ];
     for (const code of codes) expect(hasKey(`errors.ai.${code}`)).toBe(true);
+  });
+
+  it("contains a message for every API error code", () => {
+    const codes: Exclude<ApiErrorCode, AiErrorCode>[] = [
+      "invalid_json",
+      "validation",
+      "not_found",
+      "internal_error",
+    ];
+    for (const code of codes) expect(hasKey(`errors.api.${code}`)).toBe(true);
   });
 });

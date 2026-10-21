@@ -30,7 +30,7 @@ export function fakeLlm(...responses: (string | object | Error)[]) {
   }
   const withStructuredOutput = vi.fn(() => ({ invoke }));
   const model = { withStructuredOutput } as unknown as BaseChatModel;
-  const llm: Llm = { model, maxValidationAttempts: 2 };
+  const llm: Llm = { model, modelName: "fake-model", maxValidationAttempts: 2 };
   return { llm, invoke, withStructuredOutput };
 }
 

@@ -28,6 +28,7 @@ export function getLlm(): Llm {
   const env = getEnv();
   llm ??= {
     model: createChatModel(env),
+    modelName: env.OPENAI_MODEL,
     maxValidationAttempts: env.LLM_MAX_VALIDATION_ATTEMPTS,
   };
   return llm;

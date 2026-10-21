@@ -18,6 +18,7 @@ import { buildRetryPrompt, SYSTEM_PROMPT } from "./prompts";
 
 export type Llm = {
   model: BaseChatModel;
+  modelName: string;
   maxValidationAttempts: number;
 };
 

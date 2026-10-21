@@ -4,6 +4,12 @@
     "description": "Draft milestones with AI, review them, save what you accept."
   },
   "errors": {
+    "api": {
+      "invalid_json": "The request could not be read. Please try again.",
+      "validation": "Some fields are not valid. Please check them.",
+      "not_found": "This plan could not be found.",
+      "internal_error": "Something went wrong. Please try again."
+    },
     "ai": {
       "timeout": "The AI took too long to respond. Please try again.",
       "rate_limited": "Too many requests right now. Please wait a moment.",
