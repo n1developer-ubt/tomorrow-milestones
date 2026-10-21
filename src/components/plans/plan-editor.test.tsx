@@ -47,13 +47,13 @@ describe("PlanEditor", () => {
     expect(screen.getByText("1 of 2 accepted")).toBeInTheDocument();
   });
 
-  it("disables publishing until a milestone is accepted", () => {
+  it("disables saving until a milestone is accepted", () => {
     renderWithIntl(<PlanEditor initialPlan={planDto()} />);
 
-    expect(screen.getByRole("button", { name: "Publish plan" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save plan" })).toBeDisabled();
   });
 
-  it("publishes and switches to read-only", async () => {
+  it("saves the plan and switches to read-only", async () => {
     const plan = planDto({
       milestones: [reviewCardFactory.build({ status: "accepted" })],
     });
@@ -68,7 +68,7 @@ describe("PlanEditor", () => {
     const user = userEvent.setup();
     renderWithIntl(<PlanEditor initialPlan={plan} />);
 
-    await user.click(screen.getByRole("button", { name: "Publish plan" }));
+    await user.click(screen.getByRole("button", { name: "Save plan" }));
 
     expect(await screen.findByText("Published")).toBeInTheDocument();
     expect(
@@ -77,6 +77,22 @@ describe("PlanEditor", () => {
     expect(
       screen.queryByRole("button", { name: "Refine all" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("opens the refine popup next to the review heading", async () => {
+    const user = userEvent.setup();
+    renderWithIntl(<PlanEditor initialPlan={planDto()} />);
+
+    await user.click(screen.getByRole("button", { name: "Refine all" }));
+    const dialog = await screen.findByRole("dialog");
+
+    expect(
+      within(dialog).getByRole("button", { name: "Refine all" }),
+    ).toBeDisabled();
+    await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
+    await vi.waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
   });
 
   it("shows the server error and keeps the current state", async () => {
@@ -91,11 +107,15 @@ describe("PlanEditor", () => {
     const user = userEvent.setup();
     renderWithIntl(<PlanEditor initialPlan={plan} />);
 
+    await user.click(screen.getByRole("button", { name: "Refine all" }));
+    const dialog = await screen.findByRole("dialog");
     await user.type(
-      screen.getByLabelText("Refine all milestones"),
+      within(dialog).getByLabelText("Refine all milestones"),
       "Make it hands-on",
     );
-    await user.click(screen.getByRole("button", { name: "Refine all" }));
+    await user.click(
+      within(dialog).getByRole("button", { name: "Refine all" }),
+    );
 
     expect(
       await screen.findByText(

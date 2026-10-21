@@ -27,7 +27,7 @@ export function PublishBar({
   const t = useTranslations("publish");
 
   return (
-    <div className="bg-background/95 supports-[backdrop-filter]:bg-background/80 sticky bottom-0 flex flex-col gap-3 border-t py-4 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+    <div className="bg-card/95 supports-[backdrop-filter]:bg-card/85 shadow-indigo-dark/10 sticky bottom-4 z-10 flex flex-col gap-3 rounded-xl border px-5 py-4 shadow-lg backdrop-blur sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col text-sm">
         <span className="font-semibold" aria-live="polite">
           {t("summary", { accepted, total })}

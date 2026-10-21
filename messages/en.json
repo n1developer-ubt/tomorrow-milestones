@@ -71,10 +71,13 @@
   },
   "refineAll": {
     "label": "Refine all milestones",
+    "hint": "Describe one change for the whole plan. Accepted milestones stay unchanged.",
     "placeholder": "e.g. make every milestone more hands-on",
     "submit": "Refine all",
     "refining": "Refining…",
-    "noChanges": "The AI made no changes for this instruction."
+    "noChanges": "The AI made no changes for this instruction.",
+    "done": "Milestones refined. Review the changes.",
+    "cancel": "Cancel"
   },
   "removed": {
     "heading": "Removed by AI",
@@ -83,8 +86,8 @@
   "publish": {
     "summary": "{accepted} of {total} accepted",
     "tokens": "{count, plural, one {# token} other {# tokens}} used",
-    "submit": "Publish plan",
-    "publishing": "Publishing…",
+    "submit": "Save plan",
+    "publishing": "Saving…",
     "pendingHint": "Milestones still needing review will not be published.",
     "draftSaved": "Draft saved automatically",
     "publishedOn": "Published {date}"

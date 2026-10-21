@@ -10,6 +10,8 @@
   --color-success: var(--success);
   --color-mint: var(--mint);
   --color-indigo-dark: var(--indigo-dark);
+  --color-indigo-bright: var(--indigo-bright);
+  --color-violet: var(--violet);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-manrope);
@@ -70,6 +72,8 @@
   --success: #0fc139;
   --mint: #76f293;
   --indigo-dark: #23085d;
+  --indigo-bright: #480edd;
+  --violet: #6235d5;
   --border: #e6ddfd;
   --input: #d9caff;
   --ring: #4214b7;

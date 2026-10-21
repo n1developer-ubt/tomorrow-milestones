@@ -74,7 +74,8 @@ export function RequestForm({ pending, onSubmit }: RequestFormProps) {
       >
         <Textarea
           id="brief"
-          rows={5}
+          rows={10}
+          className="min-h-56 resize-y"
           value={values.brief}
           placeholder={t("briefPlaceholder")}
           aria-invalid={Boolean(errors.brief)}

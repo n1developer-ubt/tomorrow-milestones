@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useFormatter, useTranslations } from "next-intl";
-import { useState } from "react";
+import { toast } from "sonner";
 import { ErrorAlert } from "@/components/milestones/error-alert";
 import { MilestoneCard } from "@/components/milestones/milestone-card";
 import { RefineAllForm } from "@/components/milestones/refine-all-form";
@@ -22,7 +22,6 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
   const format = useFormatter();
   const showErrorToast = useErrorToast();
   const editor = usePlanEditor(initialPlan, showErrorToast);
-  const [notice, setNotice] = useState<string | null>(null);
   const { plan, pending, error } = editor;
   const busy = pending !== null;
   const readOnly = plan.status === "published";
@@ -32,12 +31,12 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
   ).length;
 
   const refineAll = async (instruction: string) => {
-    setNotice(null);
     const result = await editor.refineAll(instruction);
-    if (result?.changes.every((change) => change.kind === "unchanged")) {
-      setNotice(tRefine("noChanges"));
-    }
-    return Boolean(result);
+    if (!result) return false;
+    const unchanged = result.changes.every((c) => c.kind === "unchanged");
+    if (unchanged) toast.info(tRefine("noChanges"));
+    else toast.success(tRefine("done"));
+    return true;
   };
 
   return (
@@ -70,13 +69,22 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
           aria-labelledby="review-heading"
           className="flex flex-col gap-4"
         >
-          <div className="flex flex-col gap-1">
-            <h2 id="review-heading" className="text-lg font-semibold">
-              {t("heading")}
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              {readOnly ? t("publishedHint") : t("hint")}
-            </p>
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div className="flex flex-col gap-1">
+              <h2 id="review-heading" className="text-lg font-semibold">
+                {t("heading")}
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                {readOnly ? t("publishedHint") : t("hint")}
+              </p>
+            </div>
+            {!readOnly && (
+              <RefineAllForm
+                pending={pending?.kind === "refineAll"}
+                disabled={busy}
+                onSubmit={refineAll}
+              />
+            )}
           </div>
 
           <ol className="flex flex-col gap-4">
@@ -141,16 +149,6 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
                   void editor.review({ type: "restoreRemoved", milestoneId })
                 }
               />
-              <RefineAllForm
-                pending={pending?.kind === "refineAll"}
-                disabled={busy}
-                onSubmit={refineAll}
-              />
-              {notice && (
-                <p role="status" className="text-muted-foreground text-sm">
-                  {notice}
-                </p>
-              )}
               <PublishBar
                 accepted={acceptedCount(plan)}
                 total={cards.length}
