@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "eval": "promptfoo eval -c evals/promptfooconfig.yaml"
+    "eval:prepare": "tsx scripts/export-eval-assets.ts",
+    "eval": "pnpm eval:prepare && promptfoo eval -c evals/promptfooconfig.yaml --env-file .env.local --no-cache",
+    "eval:view": "promptfoo view"
   },
   "engines": {
     "node": ">=22"
@@ -58,6 +60,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "promptfoo": "^0.124.1",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.0.5"
