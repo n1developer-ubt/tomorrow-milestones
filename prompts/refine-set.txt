@@ -1,0 +1,11 @@
+<title>{{title}}</title>
+<brief>{{brief}}</brief>
+<current_milestones>{{milestones}}</current_milestones>
+<edit_instruction>{{instruction}}</edit_instruction>
+
+Apply the edit instruction and return the complete new list of milestones in order.
+- Apply it to every unlocked milestone it concerns; a changed milestone must read noticeably different.
+- Keep the "id" of every milestone you keep or change. Use null for new milestones.
+- Leave out milestones the instruction removes.
+- Milestones with "locked": true must be returned unchanged with their id.
+- If the edit instruction is not about these milestones, return all current milestones unchanged with their ids.

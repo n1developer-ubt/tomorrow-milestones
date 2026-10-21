@@ -1,0 +1,4 @@
+<title>{{title}}</title>
+<brief>{{brief}}</brief>
+
+Create milestones for this brief.

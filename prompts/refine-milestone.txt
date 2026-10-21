@@ -1,0 +1,8 @@
+<title>{{title}}</title>
+<brief>{{brief}}</brief>
+<current_milestones>{{milestones}}</current_milestones>
+<edit_instruction>{{instruction}}</edit_instruction>
+
+Rewrite only the milestone with id "{{target_id}}" following the edit instruction.
+The other milestones are context: avoid duplicating them. Return only the rewritten milestone.
+If the edit instruction is not about this milestone, return it unchanged.
