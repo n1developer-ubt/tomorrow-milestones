@@ -1,16 +1,11 @@
-import type { NextResponse } from "next/server";
 import type { z } from "zod";
 import { failure, validationFailure } from "./responses";
-import type { ApiResponse } from "./types";
-
-export type ValidatedBody<T> =
-  | { ok: true; data: T }
-  | { ok: false; response: NextResponse<ApiResponse<never>> };
+import type { ValidatedInput } from "./types";
 
 export async function validateBody<T extends z.ZodType>(
   request: Request,
   schema: T,
-): Promise<ValidatedBody<z.infer<T>>> {
+): Promise<ValidatedInput<z.infer<T>>> {
   let body: unknown;
   try {
     body = await request.json();

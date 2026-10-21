@@ -1,6 +1,7 @@
 import type { z } from "zod";
 import { handleRouteError } from "./responses";
 import { validateBody } from "./validate-body";
+import { validateQuery } from "./validate-query";
 
 type Handler<Args extends unknown[]> = (...args: Args) => Promise<Response>;
 
@@ -24,5 +25,16 @@ export function validatedRoute<T extends z.ZodType>(
     const body = await validateBody(request, schema);
     if (!body.ok) return body.response;
     return handler(body.data);
+  });
+}
+
+export function validatedQueryRoute<T extends z.ZodType>(
+  schema: T,
+  handler: (query: z.infer<T>) => Promise<Response>,
+): (request: Request) => Promise<Response> {
+  return withErrorHandling(async (request: Request) => {
+    const query = validateQuery(request, schema);
+    if (!query.ok) return query.response;
+    return handler(query.data);
   });
 }

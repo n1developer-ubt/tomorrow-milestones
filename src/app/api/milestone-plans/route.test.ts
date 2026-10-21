@@ -6,11 +6,12 @@ import { fakeLlm } from "@/test/fake-model";
 import { InMemoryMilestonePlanRepository } from "@/test/fake-repository";
 import {
   generationRequestFactory,
+  newMilestonePlanFactory,
   savedMilestoneFactory,
   tokenUsageFactory,
 } from "@/test/factories";
 import { jsonRequest } from "@/test/http";
-import { POST } from "./route";
+import { GET, POST } from "./route";
 
 vi.mock("@/lib/ai/chat-model", () => ({ getLlm: vi.fn() }));
 vi.mock("@/lib/storage", () => ({ getMilestonePlanRepository: vi.fn() }));
@@ -21,6 +22,42 @@ beforeEach(() => {
   repository = new InMemoryMilestonePlanRepository();
   vi.mocked(getMilestonePlanRepository).mockResolvedValue(repository);
   vi.mocked(getLlm).mockReturnValue(fakeLlm().llm);
+});
+
+function list(query = "") {
+  return GET(new Request(`http://localhost/api/milestone-plans${query}`));
+}
+
+describe("GET /api/milestone-plans", () => {
+  it("lists saved plans newest first", async () => {
+    const first = await repository.create(newMilestonePlanFactory.build());
+    const second = await repository.create(newMilestonePlanFactory.build());
+
+    const response = await list();
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.data.map((p: { id: string }) => p.id)).toEqual([
+      second.id,
+      first.id,
+    ]);
+  });
+
+  it("respects the limit", async () => {
+    await repository.create(newMilestonePlanFactory.build());
+    await repository.create(newMilestonePlanFactory.build());
+
+    const body = await (await list("?limit=1")).json();
+
+    expect(body.data).toHaveLength(1);
+  });
+
+  it.each(["0", "101", "abc"])("rejects limit=%s", async (limit) => {
+    const response = await list(`?limit=${limit}`);
+
+    expect(response.status).toBe(400);
+    expect((await response.json()).error.code).toBe("validation");
+  });
 });
 
 describe("POST /api/milestone-plans", () => {

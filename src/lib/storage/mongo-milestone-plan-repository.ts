@@ -26,6 +26,15 @@ export class MongoMilestonePlanRepository implements MilestonePlanRepository {
     const document = await this.collection.findOne({ _id: new ObjectId(id) });
     return document ? toMilestonePlan(document) : null;
   }
+
+  async listLatest(limit: number): Promise<MilestonePlan[]> {
+    const documents = await this.collection
+      .find()
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .toArray();
+    return documents.map(toMilestonePlan);
+  }
 }
 
 export function toMilestonePlan({

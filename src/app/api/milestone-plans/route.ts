@@ -1,9 +1,20 @@
 import { getLlm } from "@/lib/ai/chat-model";
 import { PROMPT_VERSION } from "@/lib/ai/prompts";
 import { success } from "@/lib/api/responses";
-import { validatedRoute } from "@/lib/api/route-handlers";
+import { validatedQueryRoute, validatedRoute } from "@/lib/api/route-handlers";
 import { getMilestonePlanRepository } from "@/lib/storage";
-import { SaveMilestonePlanRequestSchema } from "@/lib/validation/milestone-plan";
+import {
+  ListMilestonePlansQuerySchema,
+  SaveMilestonePlanRequestSchema,
+} from "@/lib/validation/milestone-plan";
+
+export const GET = validatedQueryRoute(
+  ListMilestonePlansQuerySchema,
+  async ({ limit }) => {
+    const repository = await getMilestonePlanRepository();
+    return success(await repository.listLatest(limit));
+  },
+);
 
 export const POST = validatedRoute(
   SaveMilestonePlanRequestSchema,

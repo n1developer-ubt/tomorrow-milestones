@@ -34,7 +34,8 @@
       "duplicateIds": "Milestone ids must be unique"
     },
     "plan": {
-      "noneAccepted": "Accept at least one milestone before saving"
+      "noneAccepted": "Accept at least one milestone before saving",
+      "limitInvalid": "Limit must be a whole number between 1 and 100"
     },
     "refine": {
       "instructionTooShort": "Instruction is too short",

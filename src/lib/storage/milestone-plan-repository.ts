@@ -17,4 +17,5 @@ export type NewMilestonePlan = Omit<MilestonePlan, "id" | "createdAt">;
 export interface MilestonePlanRepository {
   create(plan: NewMilestonePlan): Promise<MilestonePlan>;
   findById(id: string): Promise<MilestonePlan | null>;
+  listLatest(limit: number): Promise<MilestonePlan[]>;
 }

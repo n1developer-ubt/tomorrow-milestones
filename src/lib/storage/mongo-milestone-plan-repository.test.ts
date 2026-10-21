@@ -12,15 +12,20 @@ function setup() {
   const insertedId = new ObjectId();
   const insertOne = vi.fn().mockResolvedValue({ insertedId });
   const findOne = vi.fn();
+  const toArray = vi.fn().mockResolvedValue([]);
+  const cursor = { sort: vi.fn(), limit: vi.fn(), toArray };
+  cursor.sort.mockReturnValue(cursor);
+  cursor.limit.mockReturnValue(cursor);
   const collection = {
     insertOne,
     findOne,
+    find: vi.fn().mockReturnValue(cursor),
   } as unknown as Collection<MilestonePlanDocument>;
   const repository = new MongoMilestonePlanRepository(
     collection,
     () => createdAt,
   );
-  return { repository, insertOne, findOne, insertedId };
+  return { repository, insertOne, findOne, insertedId, cursor };
 }
 
 describe("MongoMilestonePlanRepository", () => {
@@ -60,5 +65,18 @@ describe("MongoMilestonePlanRepository", () => {
 
     await expect(repository.findById("not-an-id")).resolves.toBeNull();
     expect(findOne).not.toHaveBeenCalled();
+  });
+
+  it("lists the latest plans newest first with a limit", async () => {
+    const { repository, cursor } = setup();
+    const _id = new ObjectId();
+    const plan = newMilestonePlanFactory.build();
+    cursor.toArray.mockResolvedValue([{ ...plan, createdAt, _id }]);
+
+    const plans = await repository.listLatest(5);
+
+    expect(cursor.sort).toHaveBeenCalledWith({ createdAt: -1 });
+    expect(cursor.limit).toHaveBeenCalledWith(5);
+    expect(plans).toEqual([{ ...plan, createdAt, id: _id.toHexString() }]);
   });
 });
