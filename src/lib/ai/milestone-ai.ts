@@ -10,6 +10,7 @@ import type {
   RefineMilestoneRequest,
   RefineSetRequest,
 } from "@/lib/validation/refine-request";
+import type { TokenUsage } from "@/lib/validation/token-usage";
 import {
   GeneratedOutput,
   RefinedMilestoneOutput,
@@ -22,46 +23,55 @@ import {
 } from "./prompts";
 import { callLlmWithValidation, type Llm } from "./structured-llm-call";
 
-export type RefinedSet = {
+export type GeneratedMilestones = {
   milestones: DraftMilestone[];
-  changes: MilestoneChange[];
+  usage: TokenUsage;
 };
+
+export type RefinedSet = GeneratedMilestones & { changes: MilestoneChange[] };
+
+export type RefinedMilestone = { milestone: DraftMilestone; usage: TokenUsage };
 
 export async function generateMilestones(
   llm: Llm,
   request: GenerationRequest,
-): Promise<DraftMilestone[]> {
-  return callLlmWithValidation({
+): Promise<GeneratedMilestones> {
+  const { value, usage } = await callLlmWithValidation({
     llm,
     prompt: buildGeneratePrompt(request),
     schemaName: "generated_milestones",
     outputSchema: GeneratedOutput,
     validate: validateGeneratedMilestones,
   });
+  return { milestones: value, usage };
 }
 
 export async function refineMilestoneSet(
   llm: Llm,
   { request, milestones, instruction }: RefineSetRequest,
 ): Promise<RefinedSet> {
-  const refined = await callLlmWithValidation({
+  const { value, usage } = await callLlmWithValidation({
     llm,
     prompt: buildRefineSetPrompt(request, milestones, instruction),
     schemaName: "refined_milestones",
     outputSchema: RefinedSetOutput,
     validate: (output) => validateRefinedSet(output, milestones),
   });
-  return { milestones: refined, changes: diffMilestones(milestones, refined) };
+  return {
+    milestones: value,
+    changes: diffMilestones(milestones, value),
+    usage,
+  };
 }
 
 export async function refineMilestone(
   llm: Llm,
   { request, milestones, targetId, mode, instruction }: RefineMilestoneRequest,
-): Promise<DraftMilestone> {
+): Promise<RefinedMilestone> {
   const target = milestones.find((m) => m.id === targetId);
   if (!target) throw new Error(`Milestone ${targetId} not found`);
 
-  return callLlmWithValidation({
+  const { value, usage } = await callLlmWithValidation({
     llm,
     prompt: buildRefineMilestonePrompt(
       request,
@@ -74,4 +84,5 @@ export async function refineMilestone(
     outputSchema: RefinedMilestoneOutput,
     validate: (output) => validateRefinedMilestone(output, target, mode),
   });
+  return { milestone: value, usage };
 }

@@ -1,20 +1,19 @@
 import "server-only";
 import { MongoClient, type Db } from "mongodb";
+import { getEnv } from "@/lib/env";
 
-const uri = process.env.MONGODB_URI;
-if (!uri) throw new Error("MONGODB_URI is not set");
+type MongoGlobal = { mongoClientPromise?: Promise<MongoClient> };
 
-const globalForMongo = globalThis as unknown as {
-  mongoClientPromise?: Promise<MongoClient>;
-};
+const globalForMongo = globalThis as unknown as MongoGlobal;
 
-const clientPromise =
-  globalForMongo.mongoClientPromise ?? new MongoClient(uri).connect();
-if (process.env.NODE_ENV !== "production") {
-  globalForMongo.mongoClientPromise = clientPromise;
+function getClient(): Promise<MongoClient> {
+  globalForMongo.mongoClientPromise ??= new MongoClient(
+    getEnv().MONGODB_URI,
+  ).connect();
+  return globalForMongo.mongoClientPromise;
 }
 
 export async function getDb(): Promise<Db> {
-  const client = await clientPromise;
-  return client.db(process.env.MONGODB_DB);
+  const client = await getClient();
+  return client.db(getEnv().MONGODB_DB);
 }

@@ -27,6 +27,9 @@
       "tooMany": "Too many milestones",
       "duplicateIds": "Milestone ids must be unique"
     },
+    "plan": {
+      "noneAccepted": "Accept at least one milestone before saving"
+    },
     "refine": {
       "instructionTooShort": "Instruction is too short",
       "instructionTooLong": "Instruction is too long",

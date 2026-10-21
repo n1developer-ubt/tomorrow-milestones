@@ -1,0 +1,22 @@
+import { z } from "zod";
+import { GenerationRequestSchema } from "./generation-request";
+import { MILESTONE_LIMITS, MilestoneSchema } from "./milestone";
+import { TokenUsageSchema } from "./token-usage";
+
+export type SavedMilestone = z.infer<typeof SavedMilestoneSchema>;
+export type SaveMilestonePlanRequest = z.infer<
+  typeof SaveMilestonePlanRequestSchema
+>;
+
+export const SavedMilestoneSchema = MilestoneSchema.extend({
+  edited: z.boolean().default(false),
+});
+
+export const SaveMilestonePlanRequestSchema = z.object({
+  request: GenerationRequestSchema,
+  milestones: z
+    .array(SavedMilestoneSchema)
+    .min(1, "validation.plan.noneAccepted")
+    .max(MILESTONE_LIMITS.count.max, "validation.milestone.tooMany"),
+  tokenUsage: TokenUsageSchema,
+});

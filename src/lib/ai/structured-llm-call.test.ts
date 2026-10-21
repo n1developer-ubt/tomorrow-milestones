@@ -6,7 +6,12 @@ import { callLlmWithValidation, type Llm } from "./structured-llm-call";
 
 const Schema = z.object({ value: z.number().min(1) });
 
-function run(llm: Llm) {
+async function run(llm: Llm) {
+  const { value } = await callWithUsage(llm);
+  return value;
+}
+
+function callWithUsage(llm: Llm) {
   return callLlmWithValidation({
     llm,
     prompt: "prompt",
@@ -45,6 +50,16 @@ describe("callLlmWithValidation", () => {
     const retry = sentMessages(invoke, 1);
     expect(retry.at(-2)).toEqual({ type: "ai", text: '{"value":0}' });
     expect(retry.at(-1)?.text).toContain("value: too small");
+  });
+
+  it("sums token usage across attempts", async () => {
+    const { llm } = fakeLlm({ value: 0 }, { value: 2 });
+    const { usage } = await callWithUsage(llm);
+    expect(usage).toEqual({
+      inputTokens: 200,
+      outputTokens: 100,
+      totalTokens: 300,
+    });
   });
 
   it("treats non-JSON output as invalid", async () => {

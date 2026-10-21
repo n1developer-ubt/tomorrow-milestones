@@ -18,20 +18,35 @@ describe("generateMilestones", () => {
   it("returns validated milestones with unique ids, unlocked", async () => {
     const { llm } = fakeLlm({ milestones: milestoneFactory.buildList(3) });
 
-    const result = await generateMilestones(llm, request);
+    const { milestones } = await generateMilestones(llm, request);
 
-    expect(result).toHaveLength(3);
-    expect(new Set(result.map((m) => m.id)).size).toBe(3);
-    expect(result.every((m) => m.locked === false)).toBe(true);
+    expect(milestones).toHaveLength(3);
+    expect(new Set(milestones.map((m) => m.id)).size).toBe(3);
+    expect(milestones.every((m) => m.locked === false)).toBe(true);
   });
 
-  it("retries when too few milestones are returned", async () => {
+  it("reports token usage of a single call", async () => {
+    const { llm } = fakeLlm({ milestones: milestoneFactory.buildList(2) });
+
+    const { usage } = await generateMilestones(llm, request);
+
+    expect(usage).toEqual({
+      inputTokens: 100,
+      outputTokens: 50,
+      totalTokens: 150,
+    });
+  });
+
+  it("retries when too few milestones are returned and sums token usage", async () => {
     const { llm, invoke } = fakeLlm(
       { milestones: milestoneFactory.buildList(1) },
       { milestones: milestoneFactory.buildList(2) },
     );
 
-    await expect(generateMilestones(llm, request)).resolves.toHaveLength(2);
+    const { milestones, usage } = await generateMilestones(llm, request);
+
+    expect(milestones).toHaveLength(2);
+    expect(usage.totalTokens).toBe(300);
     expect(invoke).toHaveBeenCalledTimes(2);
   });
 
@@ -151,14 +166,14 @@ describe("refineMilestone", () => {
   it("keeps the target id and unlocks the result", async () => {
     const { llm } = fakeLlm(longer);
 
-    const result = await refineMilestone(llm, {
+    const { milestone } = await refineMilestone(llm, {
       request,
       milestones,
       targetId: target!.id,
       mode: "longer",
     });
 
-    expect(result).toEqual({ ...longer, id: target!.id, locked: false });
+    expect(milestone).toEqual({ ...longer, id: target!.id, locked: false });
   });
 
   it("retries when 'shorter' does not shorten the description", async () => {
@@ -167,14 +182,14 @@ describe("refineMilestone", () => {
     });
     const { llm, invoke } = fakeLlm(longer, shorter);
 
-    const result = await refineMilestone(llm, {
+    const { milestone } = await refineMilestone(llm, {
       request,
       milestones,
       targetId: target!.id,
       mode: "shorter",
     });
 
-    expect(result.description).toBe(shorter.description);
+    expect(milestone.description).toBe(shorter.description);
     expect(invoke).toHaveBeenCalledTimes(2);
   });
 
