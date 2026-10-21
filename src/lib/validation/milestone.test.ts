@@ -1,35 +1,20 @@
 import { describe, expect, it } from "vitest";
+import { milestoneFactory } from "@/test/factories";
 import { GeneratedMilestonesSchema, MilestoneSchema } from "./milestone";
-
-const validMilestone = {
-  title: "Map campus waste streams",
-  description:
-    "Audit bins in three buildings for one week and record waste by category.",
-};
-
-function milestonesOfCount(count: number) {
-  return { milestones: Array.from({ length: count }, () => validMilestone) };
-}
 
 describe("MilestoneSchema", () => {
   it("accepts a valid milestone", () => {
-    expect(MilestoneSchema.safeParse(validMilestone).success).toBe(true);
+    expect(MilestoneSchema.safeParse(milestoneFactory.build()).success).toBe(
+      true,
+    );
   });
 
-  it("rejects a description that is too short", () => {
-    const result = MilestoneSchema.safeParse({
-      ...validMilestone,
-      description: "Do the audit.",
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it("rejects a title that is too long", () => {
-    const result = MilestoneSchema.safeParse({
-      ...validMilestone,
-      title: "a".repeat(81),
-    });
-    expect(result.success).toBe(false);
+  it.each([
+    ["a description that is too short", { description: "Do the audit." }],
+    ["a title that is too long", { title: "a".repeat(81) }],
+  ])("rejects %s", (_, overrides) => {
+    const milestone = milestoneFactory.build(overrides);
+    expect(MilestoneSchema.safeParse(milestone).success).toBe(false);
   });
 
   it("rejects missing fields", () => {
@@ -41,14 +26,12 @@ describe("MilestoneSchema", () => {
 
 describe("GeneratedMilestonesSchema", () => {
   it.each([2, 4, 6])("accepts %i milestones", (count) => {
-    expect(
-      GeneratedMilestonesSchema.safeParse(milestonesOfCount(count)).success,
-    ).toBe(true);
+    const output = { milestones: milestoneFactory.buildList(count) };
+    expect(GeneratedMilestonesSchema.safeParse(output).success).toBe(true);
   });
 
   it.each([0, 1, 7])("rejects %i milestones", (count) => {
-    expect(
-      GeneratedMilestonesSchema.safeParse(milestonesOfCount(count)).success,
-    ).toBe(false);
+    const output = { milestones: milestoneFactory.buildList(count) };
+    expect(GeneratedMilestonesSchema.safeParse(output).success).toBe(false);
   });
 });
