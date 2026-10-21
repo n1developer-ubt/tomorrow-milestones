@@ -8,7 +8,9 @@
       "invalid_json": "The request could not be read. Please try again.",
       "validation": "Some fields are not valid. Please check them.",
       "not_found": "This plan could not be found.",
-      "internal_error": "Something went wrong. Please try again."
+      "internal_error": "Something went wrong. Please try again.",
+      "unauthorized": "Authentication required.",
+      "auth_misconfigured": "Authentication is not configured on this server."
     },
     "ai": {
       "timeout": "The AI took too long to respond. Please try again.",
