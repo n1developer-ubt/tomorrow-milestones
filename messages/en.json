@@ -38,6 +38,7 @@
     "hint": "Accept, reject or edit each milestone. Accepted milestones stay unchanged when you refine all.",
     "publishedHint": "This plan is published. Only accepted milestones are part of the final result.",
     "step": "Step {number}",
+    "acceptAll": "Accept all",
     "back": "All plans"
   },
   "card": {

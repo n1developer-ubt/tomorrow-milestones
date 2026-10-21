@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCheck } from "lucide-react";
 import { AnimatePresence, motion, MotionConfig } from "motion/react";
 import { useFormatter, useTranslations } from "next-intl";
 import { toast } from "sonner";
@@ -8,6 +9,7 @@ import { MilestoneCard } from "@/components/milestones/milestone-card";
 import { RefineAllForm } from "@/components/milestones/refine-all-form";
 import { RemovedMilestones } from "@/components/milestones/removed-milestones";
 import { useErrorToast } from "@/components/milestones/use-error-toast";
+import { Button } from "@/components/ui/button";
 import { acceptedCount, type MilestonePlanDto } from "@/lib/plans/plan-dto";
 import { usePlanEditor } from "@/lib/plans/use-plan-editor";
 import { PlanStatusBadge } from "./plan-status-badge";
@@ -79,11 +81,22 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
               </p>
             </div>
             {!readOnly && (
-              <RefineAllForm
-                pending={pending?.kind === "refineAll"}
-                disabled={busy}
-                onSubmit={refineAll}
-              />
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  disabled={busy || pendingReview === 0}
+                  onClick={() => void editor.review({ type: "acceptAll" })}
+                >
+                  <CheckCheck aria-hidden />
+                  {t("acceptAll")}
+                </Button>
+                <RefineAllForm
+                  pending={pending?.kind === "refineAll"}
+                  disabled={busy}
+                  onSubmit={refineAll}
+                />
+              </div>
             )}
           </div>
 

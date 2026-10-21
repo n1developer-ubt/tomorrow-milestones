@@ -36,7 +36,8 @@ export type ReviewAction =
   | { type: "setStatus"; id: string; status: CardStatus }
   | { type: "edit"; id: string; text: Milestone }
   | { type: "revert"; id: string }
-  | { type: "restoreRemoved"; id: string };
+  | { type: "restoreRemoved"; id: string }
+  | { type: "acceptAll" };
 
 export const INITIAL_REVIEW_STATE: ReviewState = {
   cards: [],
@@ -84,6 +85,19 @@ export function reviewReducer(
             locked: action.status === "accepted",
           },
         })),
+      };
+    case "acceptAll":
+      return {
+        ...state,
+        cards: state.cards.map((card) =>
+          card.status === "pending"
+            ? {
+                ...card,
+                status: "accepted",
+                milestone: { ...card.milestone, locked: true },
+              }
+            : card,
+        ),
       };
     case "edit":
       return {

@@ -18,4 +18,5 @@ export const ReviewCommandSchema = z.discriminatedUnion("type", [
   }),
   z.object({ type: z.literal("revert"), milestoneId: MilestoneId }),
   z.object({ type: z.literal("restoreRemoved"), milestoneId: MilestoneId }),
+  z.object({ type: z.literal("acceptAll") }),
 ]);

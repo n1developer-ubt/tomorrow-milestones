@@ -52,7 +52,10 @@ export function usePlanEditor(
 
     review: (command: ReviewCommand) =>
       run(
-        { kind: "review", milestoneId: command.milestoneId },
+        {
+          kind: "review",
+          milestoneId: "milestoneId" in command ? command.milestoneId : "",
+        },
         () => planClient.review(plan.id, command),
         samePlan,
       ),

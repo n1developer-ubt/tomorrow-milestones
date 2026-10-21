@@ -99,6 +99,9 @@ export async function reviewPlan(
   command: ReviewCommand,
 ): Promise<MilestonePlan> {
   const plan = await loadDraft(repository, id);
+  if (command.type === "acceptAll") {
+    return repository.update(applyAction(plan, { type: "acceptAll" }));
+  }
   const ids =
     command.type === "restoreRemoved"
       ? plan.removed.map((m) => m.id)
@@ -151,7 +154,9 @@ function applyAction(plan: MilestonePlan, action: ReviewAction): MilestonePlan {
   return { ...plan, milestones: cards, removed, tokenUsage: usage };
 }
 
-function toReviewAction(command: ReviewCommand): ReviewAction {
+function toReviewAction(
+  command: Exclude<ReviewCommand, { type: "acceptAll" }>,
+): ReviewAction {
   switch (command.type) {
     case "setStatus":
       return {
