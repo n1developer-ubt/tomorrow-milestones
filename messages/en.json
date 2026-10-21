@@ -1,0 +1,37 @@
+{
+  "metadata": {
+    "title": "Tomorrow Milestones",
+    "description": "Draft milestones with AI, review them, save what you accept."
+  },
+  "errors": {
+    "ai": {
+      "timeout": "The AI took too long to respond. Please try again.",
+      "rate_limited": "Too many requests right now. Please wait a moment.",
+      "invalid_output": "The AI returned milestones we could not use. Please try again.",
+      "provider_error": "The AI service is unavailable. Please try again later."
+    }
+  },
+  "validation": {
+    "request": {
+      "titleTooShort": "Title is too short",
+      "titleTooLong": "Title is too long",
+      "briefTooShort": "Brief needs more detail",
+      "briefTooLong": "Brief is too long"
+    },
+    "milestone": {
+      "titleTooShort": "Title is too short",
+      "titleTooLong": "Title is too long",
+      "descriptionTooShort": "Description needs more detail",
+      "descriptionTooLong": "Description is too long",
+      "tooFew": "Too few milestones",
+      "tooMany": "Too many milestones",
+      "duplicateIds": "Milestone ids must be unique"
+    },
+    "refine": {
+      "instructionTooShort": "Instruction is too short",
+      "instructionTooLong": "Instruction is too long",
+      "instructionRequired": "Custom refine needs an instruction",
+      "targetNotFound": "Target milestone not found"
+    }
+  }
+}
