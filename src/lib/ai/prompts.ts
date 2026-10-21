@@ -7,7 +7,7 @@ import {
 } from "@/lib/validation/milestone";
 import type { RefineMode } from "@/lib/validation/refine-request";
 
-export const PROMPT_VERSION = "2026-10-21.4";
+export const PROMPT_VERSION = "2026-10-21.5";
 
 const PROMPTS_DIR = path.join(process.cwd(), "prompts");
 

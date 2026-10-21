@@ -7,10 +7,8 @@ const MilestoneOutput = z.object({
 });
 
 export const GeneratedOutput = z.object({
-  milestones: z
-    .array(MilestoneOutput)
-    .min(MILESTONE_LIMITS.count.min)
-    .max(MILESTONE_LIMITS.count.max),
+  status: z.enum(["ok", "insufficient_brief"]),
+  milestones: z.array(MilestoneOutput).max(MILESTONE_LIMITS.count.max),
 });
 
 export const RefinedSetOutput = z.object({

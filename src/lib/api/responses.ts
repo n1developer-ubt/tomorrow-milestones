@@ -10,6 +10,7 @@ const AI_ERROR_STATUS: Record<AiErrorCode, number> = {
   rate_limited: 429,
   invalid_output: 502,
   provider_error: 502,
+  brief_unclear: 422,
 };
 
 const PLAN_ERROR_STATUS: Record<PlanErrorCode, number> = {

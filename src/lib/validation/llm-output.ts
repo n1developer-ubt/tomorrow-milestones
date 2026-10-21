@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { AiError } from "@/lib/ai/errors";
 import { hasExpectedLengthChange } from "@/lib/milestones/length-change";
 import {
   findMissingLocked,
@@ -15,6 +16,9 @@ import { zodIssues, type ValidationResult } from "./validation-result";
 export function validateGeneratedMilestones(
   output: unknown,
 ): ValidationResult<DraftMilestone[]> {
+  if ((output as { status?: unknown })?.status === "insufficient_brief") {
+    throw new AiError("brief_unclear");
+  }
   const result = GeneratedMilestonesSchema.safeParse(output);
   if (!result.success) return { ok: false, issues: zodIssues(result.error) };
   return {

@@ -110,7 +110,8 @@
       "timeout": "The AI took too long to respond. Please try again.",
       "rate_limited": "Too many requests right now. Please wait a moment.",
       "invalid_output": "The AI returned milestones we could not use. Please try again.",
-      "provider_error": "The AI service is unavailable. Please try again later."
+      "provider_error": "The AI service is unavailable. Please try again later.",
+      "brief_unclear": "The brief is unclear. Describe what learners should do, research or produce."
     }
   },
   "validation": {

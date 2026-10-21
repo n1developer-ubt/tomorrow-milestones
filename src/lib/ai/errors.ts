@@ -1,5 +1,9 @@
 export type AiErrorCode =
-  "timeout" | "rate_limited" | "invalid_output" | "provider_error";
+  | "timeout"
+  | "rate_limited"
+  | "invalid_output"
+  | "provider_error"
+  | "brief_unclear";
 
 type ProviderError = { name?: string; status?: number; lc_error_code?: string };
 
