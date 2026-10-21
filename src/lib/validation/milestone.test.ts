@@ -40,13 +40,13 @@ describe("MilestoneSchema", () => {
 });
 
 describe("GeneratedMilestonesSchema", () => {
-  it.each([3, 4, 5])("accepts %i milestones", (count) => {
+  it.each([2, 4, 6])("accepts %i milestones", (count) => {
     expect(
       GeneratedMilestonesSchema.safeParse(milestonesOfCount(count)).success,
     ).toBe(true);
   });
 
-  it.each([0, 2, 6])("rejects %i milestones", (count) => {
+  it.each([0, 1, 7])("rejects %i milestones", (count) => {
     expect(
       GeneratedMilestonesSchema.safeParse(milestonesOfCount(count)).success,
     ).toBe(false);
