@@ -8,6 +8,7 @@ const EnvSchema = z.object({
   LLM_MAX_OUTPUT_TOKENS: z.coerce.number().int().positive().default(2000),
   LLM_TIMEOUT_MS: z.coerce.number().int().positive().default(30000),
   LLM_MAX_RETRIES: z.coerce.number().int().min(0).default(1),
+  LLM_MAX_VALIDATION_ATTEMPTS: z.coerce.number().int().min(1).default(2),
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_MODEL: z.string().min(1).default("gpt-5-nano"),
   OPENAI_REASONING_EFFORT: z
