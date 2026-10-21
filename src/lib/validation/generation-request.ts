@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type GenerationRequest = z.infer<typeof GenerationRequestSchema>;
+
 export const GENERATION_REQUEST_LIMITS = {
   title: { min: 5, max: 120 },
   brief: { min: 30, max: 4000 },
@@ -29,5 +31,3 @@ export const GenerationRequestSchema = z.object({
       "validation.request.briefTooLong",
     ),
 });
-
-export type GenerationRequest = z.infer<typeof GenerationRequestSchema>;

@@ -1,5 +1,9 @@
 import { z } from "zod";
 
+export type Milestone = z.infer<typeof MilestoneSchema>;
+export type DraftMilestone = z.infer<typeof DraftMilestoneSchema>;
+export type GeneratedMilestones = z.infer<typeof GeneratedMilestonesSchema>;
+
 export const MILESTONE_LIMITS = {
   title: { min: 5, max: 80 },
   description: { min: 40, max: 400 },
@@ -36,7 +40,3 @@ export const DraftMilestoneSchema = MilestoneSchema.extend({
   id: z.string().min(1),
   locked: z.boolean().default(false),
 });
-
-export type Milestone = z.infer<typeof MilestoneSchema>;
-export type DraftMilestone = z.infer<typeof DraftMilestoneSchema>;
-export type GeneratedMilestones = z.infer<typeof GeneratedMilestonesSchema>;
