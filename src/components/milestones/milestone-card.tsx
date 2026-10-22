@@ -24,18 +24,17 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { CardStatus, ReviewCard } from "@/lib/review/review-reducer";
-import { cn } from "@/lib/utils";
-import { fieldErrors, type FieldErrors } from "@/lib/validation/field-errors";
+import type { CardStatus, ReviewCard } from "@/lib/milestones/review";
 import {
+  fieldErrors,
+  INSTRUCTION_LIMITS,
   MILESTONE_LIMITS,
   MilestoneSchema,
+  type FieldErrors,
   type Milestone,
-} from "@/lib/validation/milestone";
-import {
-  INSTRUCTION_LIMITS,
   type RefineMode,
-} from "@/lib/validation/refine-request";
+} from "@/lib/milestones/schemas";
+import { cn } from "@/lib/utils";
 import { Field } from "./field";
 
 type MilestoneCardProps = {

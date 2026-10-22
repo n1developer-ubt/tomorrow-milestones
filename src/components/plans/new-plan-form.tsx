@@ -5,9 +5,8 @@ import { useState } from "react";
 import { ErrorAlert } from "@/components/milestones/error-alert";
 import { RequestForm } from "@/components/milestones/request-form";
 import { useErrorToast } from "@/components/milestones/use-error-toast";
-import type { ClientError } from "@/lib/api/client";
-import { planClient } from "@/lib/plans/plan-client";
-import type { GenerationRequest } from "@/lib/validation/generation-request";
+import { planClient, type ClientError } from "@/lib/client/plan-client";
+import type { GenerationRequest } from "@/lib/milestones/schemas";
 
 export function NewPlanForm() {
   const router = useRouter();

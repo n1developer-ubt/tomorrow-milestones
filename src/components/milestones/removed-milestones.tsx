@@ -3,7 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import type { DraftMilestone } from "@/lib/validation/milestone";
+import type { DraftMilestone } from "@/lib/milestones/schemas";
 
 type RemovedMilestonesProps = {
   removed: DraftMilestone[];

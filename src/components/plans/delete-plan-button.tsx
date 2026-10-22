@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { planClient } from "@/lib/plans/plan-client";
+import { planClient } from "@/lib/client/plan-client";
 
 type DeletePlanButtonProps = { planId: string; title: string };
 

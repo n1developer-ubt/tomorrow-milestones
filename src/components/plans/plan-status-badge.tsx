@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import type { PlanStatus } from "@/lib/storage/milestone-plan-repository";
+import type { PlanStatus } from "@/lib/repository/repository";
 import { cn } from "@/lib/utils";
 
 const STATUS_STYLES: Record<PlanStatus, string> = {

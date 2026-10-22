@@ -1,10 +1,11 @@
-import { success } from "@/lib/api/responses";
-import { validatedQueryRoute, validatedRoute } from "@/lib/api/route-handlers";
-import { getPlanDeps } from "@/lib/plans/plan-deps";
-import { createPlan } from "@/lib/plans/plan-service";
-import { getMilestonePlanRepository } from "@/lib/storage";
-import { GenerationRequestSchema } from "@/lib/validation/generation-request";
-import { ListMilestonePlansQuerySchema } from "@/lib/validation/milestone-plan";
+import { success, validatedQueryRoute, validatedRoute } from "@/lib/api/api";
+import {
+  GenerationRequestSchema,
+  ListMilestonePlansQuerySchema,
+} from "@/lib/milestones/schemas";
+import { getMilestonePlanRepository } from "@/lib/repository";
+import { getPlanDeps } from "@/lib/services/plan-deps";
+import { createPlan } from "@/lib/services/plan-service";
 
 export const GET = validatedQueryRoute(
   ListMilestonePlansQuerySchema,

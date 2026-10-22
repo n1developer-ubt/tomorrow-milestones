@@ -1,11 +1,31 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import type { GenerationRequest } from "@/lib/validation/generation-request";
+import { z } from "zod";
 import {
   MILESTONE_LIMITS,
   type DraftMilestone,
-} from "@/lib/validation/milestone";
-import type { RefineMode } from "@/lib/validation/refine-request";
+  type GenerationRequest,
+  type RefineMode,
+} from "@/lib/milestones/schemas";
+
+const MilestoneOutput = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+
+export const GeneratedOutput = z.object({
+  status: z.enum(["ok", "insufficient_brief"]),
+  milestones: z.array(MilestoneOutput).max(MILESTONE_LIMITS.count.max),
+});
+
+export const RefinedSetOutput = z.object({
+  milestones: z
+    .array(MilestoneOutput.extend({ id: z.string().nullable() }))
+    .min(MILESTONE_LIMITS.count.min)
+    .max(MILESTONE_LIMITS.count.max),
+});
+
+export const RefinedMilestoneOutput = MilestoneOutput;
 
 export const PROMPT_VERSION = "2026-10-21.5";
 

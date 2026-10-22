@@ -1,9 +1,8 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
-import { GeneratedOutput } from "@/lib/ai/output-schemas";
-import { SYSTEM_PROMPT } from "@/lib/ai/prompts";
-import { GeneratedMilestonesSchema } from "@/lib/validation/milestone";
+import { GeneratedOutput, SYSTEM_PROMPT } from "@/lib/ai/prompts";
+import { GeneratedMilestonesSchema } from "@/lib/milestones/schemas";
 
 const OUTPUT_DIR = path.join(process.cwd(), "evals", ".generated");
 

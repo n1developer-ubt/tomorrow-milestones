@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { translate } from "@/i18n/translate";
-import { getBasicAuthConfig, isAuthorized } from "@/lib/auth/basic-auth";
+import { getBasicAuthConfig, isAuthorized } from "@/lib/auth";
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],

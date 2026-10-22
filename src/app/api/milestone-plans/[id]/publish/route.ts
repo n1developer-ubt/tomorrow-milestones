@@ -1,7 +1,6 @@
-import { success } from "@/lib/api/responses";
-import { withErrorHandling } from "@/lib/api/route-handlers";
-import { publishPlan } from "@/lib/plans/plan-service";
-import { getMilestonePlanRepository } from "@/lib/storage";
+import { success, withErrorHandling } from "@/lib/api/api";
+import { getMilestonePlanRepository } from "@/lib/repository";
+import { publishPlan } from "@/lib/services/plan-service";
 
 export const POST = withErrorHandling<{ id: string }>(
   async (_request, { id }) => {

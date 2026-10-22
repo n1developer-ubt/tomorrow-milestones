@@ -13,7 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { INSTRUCTION_LIMITS } from "@/lib/validation/refine-request";
+import { INSTRUCTION_LIMITS } from "@/lib/milestones/schemas";
 
 type RefineAllFormProps = {
   pending: boolean;

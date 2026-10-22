@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { DeletePlanButton } from "@/components/plans/delete-plan-button";
 import { PlanEditor } from "@/components/plans/plan-editor";
-import { toPlanDto } from "@/lib/plans/plan-dto";
-import { getMilestonePlanRepository } from "@/lib/storage";
+import { getMilestonePlanRepository } from "@/lib/repository";
+import { toPlanDto } from "@/lib/repository/repository";
 
 export const dynamic = "force-dynamic";
 

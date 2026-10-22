@@ -4,7 +4,7 @@ import { TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import type { ClientError } from "@/lib/api/client";
+import type { ClientError } from "@/lib/client/plan-client";
 
 type ErrorAlertProps = {
   error: ClientError;

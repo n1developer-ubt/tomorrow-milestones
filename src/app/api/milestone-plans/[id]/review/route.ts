@@ -1,8 +1,7 @@
-import { success } from "@/lib/api/responses";
-import { validatedRoute } from "@/lib/api/route-handlers";
-import { reviewPlan } from "@/lib/plans/plan-service";
-import { getMilestonePlanRepository } from "@/lib/storage";
-import { ReviewCommandSchema } from "@/lib/validation/review-command";
+import { success, validatedRoute } from "@/lib/api/api";
+import { ReviewCommandSchema } from "@/lib/milestones/schemas";
+import { getMilestonePlanRepository } from "@/lib/repository";
+import { reviewPlan } from "@/lib/services/plan-service";
 
 export const POST = validatedRoute<typeof ReviewCommandSchema, { id: string }>(
   ReviewCommandSchema,

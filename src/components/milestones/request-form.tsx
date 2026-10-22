@@ -8,14 +8,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   fieldErrors,
-  withoutKey,
-  type FieldErrors,
-} from "@/lib/validation/field-errors";
-import {
   GENERATION_REQUEST_LIMITS,
   GenerationRequestSchema,
+  withoutKey,
+  type FieldErrors,
   type GenerationRequest,
-} from "@/lib/validation/generation-request";
+} from "@/lib/milestones/schemas";
 import { Field } from "./field";
 
 type RequestFormProps = {

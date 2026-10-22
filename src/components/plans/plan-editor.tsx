@@ -10,10 +10,13 @@ import { RefineAllForm } from "@/components/milestones/refine-all-form";
 import { RemovedMilestones } from "@/components/milestones/removed-milestones";
 import { useErrorToast } from "@/components/milestones/use-error-toast";
 import { Button } from "@/components/ui/button";
-import { acceptedCount, type MilestonePlanDto } from "@/lib/plans/plan-dto";
-import { usePlanEditor } from "@/lib/plans/use-plan-editor";
+import {
+  acceptedCount,
+  type MilestonePlanDto,
+} from "@/lib/repository/repository";
 import { PlanStatusBadge } from "./plan-status-badge";
 import { PublishBar } from "./publish-bar";
+import { usePlanEditor } from "./use-plan-editor";
 
 type PlanEditorProps = { initialPlan: MilestonePlanDto };
 

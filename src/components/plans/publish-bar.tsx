@@ -3,7 +3,7 @@
 import { Loader2, Send } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import type { TokenUsage } from "@/lib/validation/token-usage";
+import type { TokenUsage } from "@/lib/milestones/schemas";
 
 type PublishBarProps = {
   accepted: number;

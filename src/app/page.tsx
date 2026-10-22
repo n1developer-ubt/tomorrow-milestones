@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { PlanList } from "@/components/plans/plan-list";
-import { toPlanDto } from "@/lib/plans/plan-dto";
-import { getMilestonePlanRepository } from "@/lib/storage";
-import { LIST_LIMITS } from "@/lib/validation/milestone-plan";
+import { LIST_LIMITS } from "@/lib/milestones/schemas";
+import { getMilestonePlanRepository } from "@/lib/repository";
+import { toPlanDto } from "@/lib/repository/repository";
 
 export const dynamic = "force-dynamic";
 

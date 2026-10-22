@@ -1,8 +1,7 @@
-import { success } from "@/lib/api/responses";
-import { validatedRoute } from "@/lib/api/route-handlers";
-import { getPlanDeps } from "@/lib/plans/plan-deps";
-import { refinePlanMilestone } from "@/lib/plans/plan-service";
-import { RefinePlanMilestoneBodySchema } from "@/lib/validation/refine-request";
+import { success, validatedRoute } from "@/lib/api/api";
+import { RefinePlanMilestoneBodySchema } from "@/lib/milestones/schemas";
+import { getPlanDeps } from "@/lib/services/plan-deps";
+import { refinePlanMilestone } from "@/lib/services/plan-service";
 
 type Params = { id: string; milestoneId: string };
 

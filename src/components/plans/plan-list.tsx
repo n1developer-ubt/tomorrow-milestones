@@ -2,7 +2,10 @@ import { ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
-import { acceptedCount, type MilestonePlanDto } from "@/lib/plans/plan-dto";
+import {
+  acceptedCount,
+  type MilestonePlanDto,
+} from "@/lib/repository/repository";
 import { PlanStatusBadge } from "./plan-status-badge";
 
 type PlanListProps = { plans: MilestonePlanDto[] };

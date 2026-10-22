@@ -1,8 +1,7 @@
-import { success } from "@/lib/api/responses";
-import { validatedRoute } from "@/lib/api/route-handlers";
-import { getPlanDeps } from "@/lib/plans/plan-deps";
-import { refinePlan } from "@/lib/plans/plan-service";
-import { RefinePlanBodySchema } from "@/lib/validation/refine-request";
+import { success, validatedRoute } from "@/lib/api/api";
+import { RefinePlanBodySchema } from "@/lib/milestones/schemas";
+import { getPlanDeps } from "@/lib/services/plan-deps";
+import { refinePlan } from "@/lib/services/plan-service";
 
 export const POST = validatedRoute<typeof RefinePlanBodySchema, { id: string }>(
   RefinePlanBodySchema,

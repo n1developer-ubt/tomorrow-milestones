@@ -1,6 +1,5 @@
-import { failure, success } from "@/lib/api/responses";
-import { withErrorHandling } from "@/lib/api/route-handlers";
-import { getMilestonePlanRepository } from "@/lib/storage";
+import { failure, success, withErrorHandling } from "@/lib/api/api";
+import { getMilestonePlanRepository } from "@/lib/repository";
 
 export const GET = withErrorHandling<{ id: string }>(
   async (_request, { id }) => {
