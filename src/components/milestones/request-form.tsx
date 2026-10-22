@@ -84,7 +84,12 @@ export function RequestForm({ pending, onSubmit }: RequestFormProps) {
         />
       </Field>
       <div>
-        <Button type="submit" size="lg" disabled={pending}>
+        <Button
+          type="submit"
+          size="lg"
+          disabled={pending}
+          className="from-violet to-primary shadow-primary/30 bg-gradient-to-b shadow-md"
+        >
           {pending ? (
             <Loader2 className="animate-spin" aria-hidden />
           ) : (

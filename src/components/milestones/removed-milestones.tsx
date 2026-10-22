@@ -22,10 +22,16 @@ export function RemovedMilestones({
   return (
     <section
       aria-labelledby="removed-heading"
-      className="flex flex-col gap-2 rounded-lg border border-dashed p-4"
+      className="bg-card/50 flex flex-col gap-2 rounded-xl border border-dashed p-4"
     >
-      <h3 id="removed-heading" className="text-sm font-medium">
+      <h3
+        id="removed-heading"
+        className="text-muted-foreground flex items-center gap-2 text-xs font-bold tracking-widest uppercase"
+      >
         {t("heading")}
+        <span className="bg-muted rounded px-1.5 py-0.5 font-mono text-[11px]">
+          {removed.length}
+        </span>
       </h3>
       <ul className="flex flex-col gap-2">
         {removed.map((milestone) => (

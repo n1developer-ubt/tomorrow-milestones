@@ -71,9 +71,12 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
           aria-labelledby="review-heading"
           className="flex flex-col gap-4"
         >
-          <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-              <h2 id="review-heading" className="text-lg font-semibold">
+              <h2
+                id="review-heading"
+                className="text-foreground text-lg font-semibold"
+              >
                 {t("heading")}
               </h2>
               <p className="text-muted-foreground text-sm">
@@ -81,10 +84,11 @@ export function PlanEditor({ initialPlan }: PlanEditorProps) {
               </p>
             </div>
             {!readOnly && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-3">
                 <Button
                   size="lg"
                   variant="outline"
+                  className="bg-card shadow-sm [&_svg]:text-emerald-600"
                   disabled={busy || pendingReview === 0}
                   onClick={() => void editor.review({ type: "acceptAll" })}
                 >

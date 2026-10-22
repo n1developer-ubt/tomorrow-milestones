@@ -49,7 +49,7 @@ export function RefineAllForm({
         )}
         {pending ? t("refining") : t("submit")}
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-4">
+      <PopoverContent align="start" className="w-80 p-4">
         <form
           className="flex flex-col gap-3"
           onSubmit={async (event) => {

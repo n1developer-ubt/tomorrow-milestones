@@ -47,7 +47,11 @@ export function DeletePlanButton({ planId, title }: DeletePlanButtonProps) {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button variant="ghost" size="sm" className="text-destructive" />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-destructive"
+          />
         }
       >
         <Trash2 aria-hidden />

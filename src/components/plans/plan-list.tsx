@@ -14,7 +14,7 @@ export function PlanList({ plans }: PlanListProps) {
 
   if (plans.length === 0) {
     return (
-      <div className="bg-card flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
+      <div className="bg-card flex flex-col items-center gap-3 rounded-2xl border border-dashed p-12 text-center">
         <p className="font-semibold">{t("empty")}</p>
         <p className="text-muted-foreground text-sm">{t("emptyHint")}</p>
         <Link href="/new" className={buttonVariants({ size: "lg" })}>
@@ -26,16 +26,18 @@ export function PlanList({ plans }: PlanListProps) {
   }
 
   return (
-    <ul className="bg-card divide-y rounded-xl border">
+    <ul className="flex flex-col gap-3">
       {plans.map((plan) => (
         <li key={plan.id}>
           <Link
             href={`/plans/${plan.id}`}
-            className="hover:bg-secondary/60 focus-visible:bg-secondary/60 flex items-center gap-4 p-4 transition-colors outline-none"
+            className="bg-card hover:border-primary/40 focus-visible:ring-ring/50 group flex items-center gap-4 rounded-xl border p-4 shadow-sm transition-all outline-none hover:shadow-md focus-visible:ring-2"
           >
             <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="truncate font-semibold">{plan.title}</span>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-foreground truncate font-semibold">
+                  {plan.title}
+                </span>
                 <PlanStatusBadge status={plan.status} />
               </div>
               <span className="text-muted-foreground text-sm">
@@ -52,7 +54,7 @@ export function PlanList({ plans }: PlanListProps) {
               </span>
             </div>
             <ChevronRight
-              className="text-muted-foreground size-4"
+              className="text-muted-foreground size-5 transition-transform group-hover:translate-x-0.5"
               aria-hidden
             />
           </Link>

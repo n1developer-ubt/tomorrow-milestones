@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, type FormEvent } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -53,9 +52,20 @@ type MilestoneCardProps = {
 
 const STATUS_STYLES: Record<CardStatus, string> = {
   pending: "",
-  accepted: "ring-2 ring-mint bg-accent/40",
+  accepted: "ring-2 ring-mint",
   rejected: "opacity-60",
 };
+
+const STATUS_BADGE_STYLES: Record<CardStatus, string> = {
+  pending: "border-amber-200 bg-amber-50 text-amber-700",
+  accepted: "border-transparent bg-indigo-dark text-white",
+  rejected: "border-border bg-muted text-muted-foreground",
+};
+
+const PILL =
+  "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold";
+
+const LILAC_PILL = cn(PILL, "border-transparent bg-secondary text-violet");
 
 export function MilestoneCard({
   card,
@@ -80,28 +90,37 @@ export function MilestoneCard({
     <Card
       role="article"
       aria-labelledby={titleId}
-      className={cn("transition-colors", STATUS_STYLES[status])}
+      className={cn(
+        "gap-0 rounded-xl py-0 shadow-sm transition-all",
+        STATUS_STYLES[status],
+      )}
     >
-      <CardHeader className="gap-2">
-        <div className="flex flex-wrap items-center gap-2">
+      <CardHeader className="gap-2 px-5 py-4">
+        <div className="flex flex-wrap items-center gap-3">
           <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
             {tReview("step", { number: index + 1 })}
           </span>
-          <Badge variant={status === "accepted" ? "default" : "outline"}>
+          <span className={cn(PILL, STATUS_BADGE_STYLES[status])}>
+            {status === "pending" && (
+              <span className="size-1.5 rounded-full bg-amber-500" aria-hidden />
+            )}
             {t(`status.${status}`)}
-          </Badge>
-          {change && <Badge variant="secondary">{t(`change.${change}`)}</Badge>}
-          {edited && <Badge variant="secondary">{t("change.edited")}</Badge>}
+          </span>
+          {change && <span className={LILAC_PILL}>{t(`change.${change}`)}</span>}
+          {edited && <span className={LILAC_PILL}>{t("change.edited")}</span>}
         </div>
         {!editing && (
           <>
             <CardTitle
               id={titleId}
-              className={cn(status === "rejected" && "line-through")}
+              className={cn(
+                "text-foreground font-semibold",
+                status === "rejected" && "line-through",
+              )}
             >
               {milestone.title}
             </CardTitle>
-            <CardDescription className="text-foreground/80 leading-relaxed">
+            <CardDescription className="text-muted-foreground leading-relaxed">
               {milestone.description}
             </CardDescription>
           </>
@@ -144,7 +163,7 @@ export function MilestoneCard({
       )}
 
       {!editing && !readOnly && (
-        <CardFooter className="flex flex-wrap gap-2">
+        <CardFooter className="bg-muted/40 flex flex-wrap gap-2 rounded-b-xl border-t px-5 py-3">
           {status === "pending" ? (
             <>
               <Button
@@ -181,7 +200,7 @@ export function MilestoneCard({
             <>
               <Button
                 size="sm"
-                variant="ghost"
+                variant="outline"
                 disabled={disabled}
                 onClick={() => setEditing(true)}
               >
@@ -257,16 +276,16 @@ function RefineButtons({
 
   return (
     <>
-      <Button size="sm" variant="ghost" disabled={disabled} onClick={onShorter}>
+      <Button size="sm" variant="outline" disabled={disabled} onClick={onShorter}>
         <Minimize2 aria-hidden />
         {t("shorter")}
       </Button>
-      <Button size="sm" variant="ghost" disabled={disabled} onClick={onLonger}>
+      <Button size="sm" variant="outline" disabled={disabled} onClick={onLonger}>
         <Maximize2 aria-hidden />
         {t("longer")}
       </Button>
-      <Button size="sm" variant="ghost" disabled={disabled} onClick={onAsk}>
-        <Sparkles aria-hidden />
+      <Button size="sm" variant="outline" disabled={disabled} onClick={onAsk}>
+        <Sparkles className="text-violet" aria-hidden />
         {t("askAi")}
       </Button>
     </>

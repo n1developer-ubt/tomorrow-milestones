@@ -12,7 +12,9 @@ export default async function NewPlanPage() {
         </h1>
         <p className="text-muted-foreground">{t("intro")}</p>
       </header>
-      <NewPlanForm />
+      <div className="bg-card rounded-xl border p-6 shadow-sm">
+        <NewPlanForm />
+      </div>
     </main>
   );
 }
