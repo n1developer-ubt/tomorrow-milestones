@@ -32,7 +32,12 @@ export default async function RootLayout({
       <body className="antialiased">
         <NextIntlClientProvider>
           <SiteHeader />
-          <Toaster richColors position="top-right" />
+          <Toaster
+            richColors
+            theme="light"
+            position="bottom-right"
+            offset={{ bottom: 96 }}
+          />
           {children}
         </NextIntlClientProvider>
       </body>
