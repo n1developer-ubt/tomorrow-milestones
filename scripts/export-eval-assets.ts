@@ -32,5 +32,7 @@ write(
 );
 write(
   "milestones.schema.json",
-  JSON.stringify(jsonSchema(GeneratedMilestonesSchema)),
+  JSON.stringify(
+    jsonSchema(GeneratedMilestonesSchema.extend({ status: z.literal("ok") })),
+  ),
 );

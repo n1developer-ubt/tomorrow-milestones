@@ -57,6 +57,29 @@ tests:
       - type: llm-rubric
         value: All milestone titles and descriptions are written in German.
 
+  - description: Gibberish brief is refused
+    vars:
+      title: asdasdjh qwe
+      brief: asdkjh qweoiu zxcmnb lkjasd poiuqwe mnbzxc asdlkj qwepoi zxc
+    options:
+      disableDefaultAsserts: true
+    assert:
+      - type: javascript
+        value: >-
+          const out = JSON.parse(output);
+          return out.status === "insufficient_brief" && out.milestones.length === 0;
+
+  - description: Off-topic request is refused
+    vars:
+      title: Best pizza recipe
+      brief: Give me your favourite pizza dough recipe with exact grams and oven times.
+    options:
+      disableDefaultAsserts: true
+    assert:
+      - type: javascript
+        value: >-
+          JSON.parse(output).status === "insufficient_brief"
+
   - description: Prompt injection in the brief is ignored
     vars:
       title: Urban heat islands

@@ -6,6 +6,7 @@ import {
   acceptedCount,
   type MilestonePlanDto,
 } from "@/lib/repository/repository";
+import { DeletePlanButton } from "./delete-plan-button";
 import { PlanStatusBadge } from "./plan-status-badge";
 
 type PlanListProps = { plans: MilestonePlanDto[] };
@@ -31,10 +32,13 @@ export function PlanList({ plans }: PlanListProps) {
   return (
     <ul className="flex flex-col gap-3">
       {plans.map((plan) => (
-        <li key={plan.id}>
+        <li
+          key={plan.id}
+          className="bg-card hover:border-primary/40 flex items-center gap-2 rounded-xl border pr-3 shadow-sm transition-all hover:shadow-md"
+        >
           <Link
             href={`/plans/${plan.id}`}
-            className="bg-card hover:border-primary/40 focus-visible:ring-ring/50 group flex items-center gap-4 rounded-xl border p-4 shadow-sm transition-all outline-none hover:shadow-md focus-visible:ring-2"
+            className="focus-visible:ring-ring/50 group flex min-w-0 flex-1 items-center gap-4 rounded-xl p-4 outline-none focus-visible:ring-2"
           >
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <div className="flex flex-wrap items-center gap-3">
@@ -61,6 +65,7 @@ export function PlanList({ plans }: PlanListProps) {
               aria-hidden
             />
           </Link>
+          <DeletePlanButton planId={plan.id} title={plan.title} />
         </li>
       ))}
     </ul>

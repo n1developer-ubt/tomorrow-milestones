@@ -27,7 +27,7 @@ export const RefinedSetOutput = z.object({
 
 export const RefinedMilestoneOutput = MilestoneOutput;
 
-export const PROMPT_VERSION = "2026-10-21.5";
+export const PROMPT_VERSION = "2026-10-22.1";
 
 const PROMPTS_DIR = path.join(process.cwd(), "prompts");
 

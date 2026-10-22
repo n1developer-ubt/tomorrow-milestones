@@ -1,9 +1,11 @@
 import { screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { PlanList } from "@/components/plans/plan-list";
 import { reviewCardFactory } from "@/test/factories";
 import { planDto } from "@/test/plan-dto-factory";
 import { renderWithIntl } from "@/test/render";
-import { PlanList } from "@/components/plans/plan-list";
+
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn() }) }));
 
 describe("PlanList", () => {
   it("shows an empty state with a link to create a plan", () => {
@@ -31,7 +33,7 @@ describe("PlanList", () => {
 
     const link = screen.getByRole("link", { name: /Design a zero-waste/ });
     expect(link).toHaveAttribute("href", "/plans/plan-7");
-    expect(screen.getByText("Published")).toBeInTheDocument();
+    expect(screen.getByText("Saved")).toBeInTheDocument();
     expect(screen.getByText(/1 of 2 accepted/)).toBeInTheDocument();
   });
 });

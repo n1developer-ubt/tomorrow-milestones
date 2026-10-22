@@ -70,7 +70,7 @@ describe("PlanEditor", () => {
 
     await user.click(screen.getByRole("button", { name: "Save plan" }));
 
-    expect(await screen.findByText("Published")).toBeInTheDocument();
+    expect(await screen.findByText("Saved")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Undo" }),
     ).not.toBeInTheDocument();

@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Tomorrow Milestones",
-    "description": "Draft milestones with AI, review them, publish what you accept."
+    "description": "Draft milestones with AI, review them, save what you accept."
   },
   "nav": {
     "brand": "Tomorrow Milestones",
@@ -10,14 +10,14 @@
   },
   "plansPage": {
     "heading": "Milestone plans",
-    "intro": "AI drafts stay drafts until you review and publish them.",
+    "intro": "AI drafts stay drafts until you review and save them.",
     "empty": "No plans yet.",
     "emptyHint": "Create your first plan to let the AI draft milestones for you.",
     "accepted": "{accepted} of {total} accepted",
     "created": "Created {date}",
     "status": {
       "draft": "Draft",
-      "published": "Published"
+      "published": "Saved"
     }
   },
   "newPlan": {
@@ -36,7 +36,7 @@
   "review": {
     "heading": "Review milestones",
     "hint": "Accept, reject or edit each milestone. Accepted milestones stay unchanged when you refine all.",
-    "publishedHint": "This plan is published. Only accepted milestones are part of the final result.",
+    "publishedHint": "This plan is saved. Only accepted milestones are part of the final result.",
     "step": "Step {number}",
     "acceptAll": "Accept all",
     "back": "All plans"
@@ -97,9 +97,9 @@
     "tokens": "{count, plural, one {# token} other {# tokens}} used",
     "submit": "Save plan",
     "publishing": "Saving…",
-    "pendingHint": "Milestones still needing review will not be published.",
+    "pendingHint": "Milestones still needing review will not be saved.",
     "draftSaved": "Draft saved automatically",
-    "publishedOn": "Published {date}"
+    "publishedOn": "Saved {date}"
   },
   "errors": {
     "network": "Could not reach the server. Check your connection and try again.",
@@ -109,8 +109,8 @@
       "validation": "Some fields are not valid. Please check them.",
       "not_found": "This plan could not be found.",
       "milestone_not_found": "This milestone could not be found.",
-      "plan_published": "This plan is published and can no longer be changed.",
-      "nothing_accepted": "Accept at least one milestone before publishing.",
+      "plan_published": "This plan is saved and can no longer be changed.",
+      "nothing_accepted": "Accept at least one milestone before saving.",
       "internal_error": "Something went wrong. Please try again.",
       "unauthorized": "Authentication required.",
       "auth_misconfigured": "Authentication is not configured on this server."
