@@ -46,6 +46,12 @@ export class MongoMilestonePlanRepository implements MilestonePlanRepository {
     await this.collection.replaceOne({ _id: new ObjectId(id) }, document);
     return { ...document, id };
   }
+
+  async delete(id: string): Promise<boolean> {
+    if (!ObjectId.isValid(id)) return false;
+    const result = await this.collection.deleteOne({ _id: new ObjectId(id) });
+    return result.deletedCount === 1;
+  }
 }
 
 export function toMilestonePlan({

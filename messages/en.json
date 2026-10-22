@@ -80,6 +80,14 @@
     "done": "Milestones refined. Review the changes.",
     "cancel": "Cancel"
   },
+  "deletePlan": {
+    "trigger": "Delete",
+    "title": "Delete this plan?",
+    "description": "\"{title}\" and all its milestones will be deleted. This cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete plan",
+    "done": "Plan deleted."
+  },
   "removed": {
     "heading": "Removed by AI",
     "restore": "Restore"

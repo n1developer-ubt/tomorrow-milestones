@@ -1,4 +1,4 @@
-import { postJson } from "@/lib/api/client";
+import { deleteJson, postJson } from "@/lib/api/client";
 import type { MilestoneChange } from "@/lib/milestones/diff";
 import type { GenerationRequest } from "@/lib/validation/generation-request";
 import type { RefineMode } from "@/lib/validation/refine-request";
@@ -33,4 +33,6 @@ export const planClient = {
 
   publish: (id: string) =>
     postJson<MilestonePlanDto>(`${BASE}/${id}/publish`, {}),
+
+  remove: (id: string) => deleteJson<{ id: string }>(`${BASE}/${id}`),
 };

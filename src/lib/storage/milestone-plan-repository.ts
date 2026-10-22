@@ -29,4 +29,5 @@ export interface MilestonePlanRepository {
   findById(id: string): Promise<MilestonePlan | null>;
   listLatest(limit: number): Promise<MilestonePlan[]>;
   update(plan: MilestonePlan): Promise<MilestonePlan>;
+  delete(id: string): Promise<boolean>;
 }

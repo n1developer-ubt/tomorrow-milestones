@@ -9,3 +9,11 @@ export const GET = withErrorHandling<{ id: string }>(
     return plan ? success(plan) : failure(404, "not_found");
   },
 );
+
+export const DELETE = withErrorHandling<{ id: string }>(
+  async (_request, { id }) => {
+    const repository = await getMilestonePlanRepository();
+    const deleted = await repository.delete(id);
+    return deleted ? success({ id }) : failure(404, "not_found");
+  },
+);

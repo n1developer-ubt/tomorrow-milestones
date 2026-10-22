@@ -37,4 +37,8 @@ export class InMemoryMilestonePlanRepository implements MilestonePlanRepository 
     this.plans.set(plan.id, updated);
     return structuredClone(updated);
   }
+
+  async delete(id: string): Promise<boolean> {
+    return this.plans.delete(id);
+  }
 }
